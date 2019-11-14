@@ -1,12 +1,19 @@
-const express = require("express");
+const { Router } = require("express");
 
-const routes = express.Router();
 const UserController = require("./controllers/UserController");
+const SessionController = require("./controllers/SessionController");
 
-routes.post("/user", UserController.store);
-routes.get("/users", UserController.list);
-routes.get("/users/:id", UserController.index);
-routes.put("/user/:id", UserController.update);
-routes.delete("/delete/:id", UserController.destroy);
+const authMiddleware = require("./middlewares/auth");
+
+const routes = Router();
+
+routes.get("/users/:email", UserController.index);
+routes.post("/sessions", SessionController.store);
+routes.post("/users", UserController.store);
+routes.get("/list", UserController.list);
+
+routes.use(authMiddleware);
+routes.delete("/users/:id", UserController.destroy);
+routes.get("/teste", (req, res) => res.json({ ok: true }));
 
 module.exports = routes;
